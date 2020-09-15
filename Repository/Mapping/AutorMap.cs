@@ -17,7 +17,7 @@ namespace Repository.Mapping {
             builder.Property(x => x.Email).IsRequired().HasMaxLength(200);
             builder.Property(x => x.Birth).IsRequired();
 
-            builder.HasMany<Livro>(x => x.Livros);
+            builder.HasMany<Livro>(x => x.Livros).WithOne(x => x.Autor);
         }
     }
 }
