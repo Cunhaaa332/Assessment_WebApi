@@ -1,4 +1,4 @@
-﻿@model Domain.Livro
+﻿@model Domain.LivroResponse
 
 @{
     ViewData["Title"] = "Create";
@@ -26,6 +26,11 @@
                 <label asp-for="Ano" class="control-label"></label>
                 <input asp-for="Ano" class="form-control" />
                 <span asp-validation-for="Ano" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Autor.Id" class="control-label">Autor Id</label>
+                <input asp-for="Autor.Id" class="form-control"/>
+                <span asp-validation-for="Autor.Id" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
