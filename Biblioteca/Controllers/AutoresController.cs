@@ -12,11 +12,11 @@ namespace Biblioteca.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AutorController : ControllerBase
+    public class AutoresController : ControllerBase
     {
         private readonly BibliotecaContext _context;
 
-        public AutorController(BibliotecaContext context)
+        public AutoresController(BibliotecaContext context)
         {
             _context = context;
         }
@@ -25,14 +25,14 @@ namespace Biblioteca.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Autor>>> GetAutores()
         {
-            return await _context.Autores.ToListAsync();
+            return await _context.Autores.Include(x => x.Livros).ToListAsync();
         }
 
         // GET: api/Autor/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Autor>> GetAutor(int id)
         {
-            var autor = await _context.Autores.FindAsync(id);
+            var autor = await _context.Autores.Include(x => x.Livros).FirstOrDefaultAsync(x => x.Id == id);
 
             if (autor == null)
             {
@@ -46,27 +46,25 @@ namespace Biblioteca.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAutor(int id, Autor autor)
-        {
-            if (id != autor.Id)
-            {
+        public async Task<IActionResult> PutAutor(int id, Autor autor) {
+            autor.Id = id; 
+            if (id != autor.Id) {
                 return BadRequest();
             }
+            var autorMod = _context.Autores.Find(id);
+            autorMod.Nome = autor.Nome;
+            autorMod.Sobrenome = autor.Sobrenome;
+            autorMod.Email = autor.Email;
+            autorMod.Birth = autor.Birth;
 
-            _context.Entry(autor).State = EntityState.Modified;
+            _context.Autores.Update(autorMod);
 
-            try
-            {
+            try {
                 await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AutorExists(id))
-                {
+            } catch (DbUpdateConcurrencyException) {
+                if (!AutorExists(id)) {
                     return NotFound();
-                }
-                else
-                {
+                } else {
                     throw;
                 }
             }
@@ -90,16 +88,26 @@ namespace Biblioteca.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Autor>> DeleteAutor(int id)
         {
-            var autor = await _context.Autores.FindAsync(id);
+            var autor = await _context.Autores.Include(x => x.Livros).FirstOrDefaultAsync(x => x.Id == id);
             if (autor == null)
             {
                 return NotFound();
             }
 
-            _context.Autores.Remove(autor);
-            await _context.SaveChangesAsync();
+            using (var transection = _context.Database.BeginTransaction()) {
+                try {
 
-            return autor;
+                    foreach (var item in autor.Livros) {
+                        _context.Livros.Remove(item);
+                    }
+                    _context.Autores.Remove(autor);
+                    await _context.SaveChangesAsync();
+                    transection.Commit();
+                } catch {
+                    transection.Rollback();
+                }
+            }
+            return NoContent();
         }
 
         private bool AutorExists(int id)
