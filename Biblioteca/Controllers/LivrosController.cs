@@ -75,15 +75,12 @@ namespace Biblioteca.Controllers
         // POST: api/Livros
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost("{titulo}/{iSBN}/{ano}/{id}")]
-        public async Task<ActionResult<Livro>> PostLivro(string titulo, string iSBN, string ano, int id)
+        [HttpPost]
+        public async Task<ActionResult<Livro>> PostLivro(LivroResponse livroResponse)
         {
-           var autorTake = _context.Autores.Find(id);
-            Livro livro = new Livro();
-            livro.Titulo = titulo;
-            livro.ISBN = iSBN;
-            livro.Ano = ano;
-            livro.Autor = autorTake;
+           var autorTake = await _context.Autores.FirstOrDefaultAsync(x => x.Id == livroResponse.Autor.Id);
+            livroResponse.Autor = autorTake;
+            Livro livro = new Livro { Titulo = livroResponse.Titulo, ISBN = livroResponse.ISBN, Ano = livroResponse.Ano, Autor = livroResponse.Autor};
             _context.Livros.Add(livro);
             await _context.SaveChangesAsync();
 

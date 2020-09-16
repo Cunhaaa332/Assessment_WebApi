@@ -9,8 +9,16 @@ namespace Domain {
         public String Titulo { get; set; }
         public String ISBN { get; set; }
         public string Ano { get; set; }
-
         [JsonIgnore]
         public virtual Autor Autor { get; set; }
     }
+    public class LivroResponse {
+        public int Id { get; set; }
+        public String Titulo { get; set; }
+        public String ISBN { get; set; }
+        public string Ano { get; set; }
+
+        public virtual Autor Autor { get; set; }
+    }
+
 }

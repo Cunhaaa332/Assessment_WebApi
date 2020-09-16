@@ -12,7 +12,7 @@ namespace Biblioteca.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AutoresController : ControllerBase
+    public class AutoresController : ControllerBase 
     {
         private readonly BibliotecaContext _context;
 

@@ -16,8 +16,6 @@ namespace Repository.Mapping {
             builder.Property(x => x.ISBN).IsRequired().HasMaxLength(50);
             builder.Property(x => x.Ano).IsRequired().HasMaxLength(50);
 
-            builder.HasOne<Autor>(x => x.Autor);
-
         }
     }
 }
