@@ -13,23 +13,18 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" />
-                <span asp-validation-for="Id" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Titulo" class="control-label"></label>
-                <input asp-for="Titulo" class="form-control" />
+                <input asp-for="Titulo" class="form-control" required/>
                 <span asp-validation-for="Titulo" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ISBN" class="control-label"></label>
-                <input asp-for="ISBN" class="form-control" />
+                <input asp-for="ISBN" class="form-control" required/>
                 <span asp-validation-for="ISBN" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Ano" class="control-label"></label>
-                <input asp-for="Ano" class="form-control" />
+                <input asp-for="Ano" class="form-control" required/>
                 <span asp-validation-for="Ano" class="text-danger"></span>
             </div>
             <div class="form-group">
